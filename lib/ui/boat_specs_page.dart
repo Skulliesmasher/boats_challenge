@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:boats_challenge/models/boat.dart';
 import 'package:flutter/material.dart';
 
-
 class BoatSpecsPage extends StatelessWidget {
   const BoatSpecsPage({Key key, this.boat}) : super(key: key);
 
@@ -251,7 +250,7 @@ class _ImageBoat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: .7,
+      aspectRatio: .85,
       child: Image.asset(boatImagePath),
     );
   }

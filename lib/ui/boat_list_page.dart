@@ -11,27 +11,34 @@ class BoatListPage extends StatefulWidget {
 
 class _BoatListPageState extends State<BoatListPage> {
   PageController _pageController;
-  double _page;
-  bool _hideAppBar;
+  ValueNotifier<double> _pageNotifier;
+  ValueNotifier<bool> _hideAppBarNotifier;
 
   @override
   void initState() {
     _pageController = PageController(viewportFraction: .7);
     _pageController.addListener(_pageListener);
-    _page = 0.0;
-    _hideAppBar = false;
+    _pageNotifier = ValueNotifier(0.0);
+    _hideAppBarNotifier = ValueNotifier(false);
     super.initState();
   }
 
-  void _pageListener() {
-    _page = _pageController.page;
-    setState(() {});
+  @override
+  void dispose() {
+    _pageController.removeListener(_pageListener);
+    _pageController.dispose();
+    super.dispose();
   }
 
+  void _pageListener() {
+    _pageNotifier.value = _pageController.page;
+  }
+
+  //------------------------------------
+  // Open Specs Boat Page
+  //------------------------------------
   void _openSpecsPage(BuildContext context, Boat boat) async {
-    setState(() {
-      _hideAppBar = true;
-    });
+    _hideAppBarNotifier.value = true;
     await Navigator.push(
         context,
         PageRouteBuilder(
@@ -44,9 +51,7 @@ class _BoatListPageState extends State<BoatListPage> {
             );
           },
         ));
-    setState(() {
-      _hideAppBar = false;
-    });
+    _hideAppBarNotifier.value = false;
   }
 
   @override
@@ -54,39 +59,39 @@ class _BoatListPageState extends State<BoatListPage> {
     return Scaffold(
       body: Column(
         children: [
+          //-----------------------------------
+          // Custom App Bar
+          //-----------------------------------
           SafeArea(
-            child: AnimatedContainer(
-              curve: Curves.fastOutSlowIn,
-              duration: const Duration(milliseconds: 600),
-              transform:
-                  Matrix4.translationValues(0, _hideAppBar ? -100 : 0, 0),
-              child: AnimatedOpacity(
-                curve: Curves.fastOutSlowIn,
-                duration: const Duration(milliseconds: 600),
-                opacity: _hideAppBar ? 0 : 1,
-                child: const _CustomAppBar(),
-              ),
-            ),
+            child: ValueListenableBuilder(
+                valueListenable: _hideAppBarNotifier,
+                builder: (context, value, _) {
+                  return _AnimatedCustomAppBar(animate: value);
+                }),
           ),
           const SizedBox(height: 20),
           //------------------------------------
           // Boat Page View
           //------------------------------------
           Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              physics: const BouncingScrollPhysics(),
-              itemCount: Boat.listBoats.length,
-              itemBuilder: (context, index) {
-                final boat = Boat.listBoats[index];
-                final factorChange = (_page - index).abs();
-                return BoatCard(
-                  boat: boat,
-                  onTapSpec: () => _openSpecsPage(context, boat),
-                  factorChange: factorChange,
-                );
-              },
-            ),
+            child: ValueListenableBuilder(
+                valueListenable: _pageNotifier,
+                builder: (context, value, _) {
+                  return PageView.builder(
+                    controller: _pageController,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: Boat.listBoats.length,
+                    itemBuilder: (context, index) {
+                      final boat = Boat.listBoats[index];
+                      final factorChange = (value - index).abs();
+                      return BoatCard(
+                        boat: boat,
+                        onTapSpec: () => _openSpecsPage(context, boat),
+                        factorChange: factorChange,
+                      );
+                    },
+                  );
+                }),
           ),
         ],
       ),
@@ -94,34 +99,47 @@ class _BoatListPageState extends State<BoatListPage> {
   }
 }
 
-class _CustomAppBar extends StatelessWidget {
-  const _CustomAppBar({
+class _AnimatedCustomAppBar extends StatelessWidget {
+  const _AnimatedCustomAppBar({
     Key key,
+    @required this.animate,
   }) : super(key: key);
+
+  final bool animate;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: kToolbarHeight,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Boats",
-              style: Theme.of(context)
-                  .textTheme
-                  .headline4
-                  .copyWith(fontWeight: FontWeight.w500),
+    return AnimatedContainer(
+      curve: Curves.fastOutSlowIn,
+      duration: const Duration(milliseconds: 600),
+      transform: Matrix4.translationValues(0, animate ? -100 : 0, 0),
+      child: AnimatedOpacity(
+        curve: Curves.fastOutSlowIn,
+        duration: const Duration(milliseconds: 600),
+        opacity: animate ? 0 : 1,
+        child: SizedBox(
+          height: kToolbarHeight,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Boats",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline4
+                      .copyWith(fontWeight: FontWeight.w500),
+                ),
+                IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {},
+                  color: Colors.grey[800],
+                  iconSize: 40,
+                )
+              ],
             ),
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {},
-              color: Colors.grey[800],
-              iconSize: 40,
-            )
-          ],
+          ),
         ),
       ),
     );
