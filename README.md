@@ -1,6 +1,8 @@
 # boats_challenge
 
-A new Flutter project.
+| Boat Challenge |
+|----------------|
+|<img src="https://media.giphy.com/media/4c6N6Nf6a4aPBAb23t/giphy.gif" width="250">
 
 ## Getting Started
 
