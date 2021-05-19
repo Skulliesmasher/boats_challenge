@@ -42,8 +42,8 @@ class _BoatListPageState extends State<BoatListPage> {
     await Navigator.push(
         context,
         PageRouteBuilder(
-          reverseTransitionDuration: const Duration(milliseconds: 800),
-          transitionDuration: const Duration(milliseconds: 800),
+          reverseTransitionDuration: const Duration(milliseconds: 600),
+          transitionDuration: const Duration(milliseconds: 600),
           pageBuilder: (context, animation, secondaryAnimation) {
             return FadeTransition(
               opacity: animation,

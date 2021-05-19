@@ -15,11 +15,15 @@ class BoatSpecsPage extends StatelessWidget {
   //-------------------------------------------------
   // Custom Flight Hero
   //-------------------------------------------------
-  Widget _flightShuttleBuilder(Animation animation) {
+  Widget _flightShuttleBuilder(
+      Animation animation, HeroFlightDirection flightDirection) {
+    final isPop = flightDirection == HeroFlightDirection.pop;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
-        final value = ElasticOutCurve(.7).transform(animation.value);
+        final value = isPop
+            ? Curves.easeInBack.transform(animation.value)
+            : Curves.easeOutBack.transform(animation.value);
         return Transform(
           alignment: Alignment.center,
           transform: Matrix4.identity()
@@ -54,8 +58,10 @@ class BoatSpecsPage extends StatelessWidget {
                 //--------------------------------------
                 Hero(
                   tag: boat.model,
-                  flightShuttleBuilder: (_, animation, __, ___, ____) =>
-                      _flightShuttleBuilder(animation),
+                  flightShuttleBuilder:
+                      (_, animation, flightDirection, ___, ____) {
+                    return _flightShuttleBuilder(animation, flightDirection);
+                  },
                   child: Transform(
                     alignment: Alignment.center,
                     transform: Matrix4.identity()
