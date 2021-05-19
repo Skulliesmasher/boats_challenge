@@ -66,27 +66,8 @@ class BoatSpecsPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                //-----------------------------------------
-                // Items Animation
-                //-----------------------------------------
-                ValueListenableBuilder(
-                  valueListenable: animateItemNotifier,
-                  builder: (context, value, child) {
-                    return TweenAnimationBuilder(
-                        curve: Curves.fastOutSlowIn,
-                        tween: Tween(begin: 1.0, end: value ? 0.0 : 1.0),
-                        duration: const Duration(milliseconds: 600),
-                        builder: (context, value, child) {
-                          return Transform.translate(
-                            offset: Offset(0, (-270.0 - (50.0 * value))),
-                            child: Opacity(
-                              opacity: 1 - value,
-                              child: child,
-                            ),
-                          );
-                        },
-                        child: child);
-                  },
+                Transform.translate(
+                  offset: Offset(0, -270.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -114,64 +95,92 @@ class BoatSpecsPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      //------------------------------------
-                      // Description Boat
-                      //------------------------------------
-                      const SizedBox(height: 20),
-                      Text(
-                        boat.description,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                      //------------------------------------
-                      // SPECS
-                      //------------------------------------
-                      const SizedBox(height: 30),
-                      Text(
-                        'SPECS',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      _BoatSpecsList(boat: boat),
-                      //-------------------------------------
-                      // Gallery List View
-                      //-------------------------------------
-                      const SizedBox(height: 20),
-                      Text(
-                        'GALLERY',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        height: 200.0,
-                        child: ListView.builder(
-                          itemCount: boat.gallery.length,
-                          scrollDirection: Axis.horizontal,
-                          itemExtent: 220,
-                          physics: const BouncingScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            final galleryPath = boat.gallery[index];
-                            //----------------------------------------
-                            // Gallery Image
-                            //----------------------------------------
-                            return Container(
-                              margin: const EdgeInsets.only(right: 20),
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Image.asset(
-                                galleryPath,
-                                fit: BoxFit.cover,
+                      //-----------------------------------------
+                      // Animated Items
+                      //-----------------------------------------
+                      ValueListenableBuilder(
+                        valueListenable: animateItemNotifier,
+                        builder: (context, value, child) {
+                          return TweenAnimationBuilder(
+                              curve: Curves.fastOutSlowIn,
+                              tween: Tween(begin: 1.0, end: value ? 0.0 : 1.0),
+                              duration: const Duration(milliseconds: 600),
+                              builder: (context, value, child) {
+                                return Transform.translate(
+                                  offset: Offset(0, (-50.0 * value)),
+                                  child: Opacity(
+                                    opacity: 1 - value,
+                                    child: child,
+                                  ),
+                                );
+                              },
+                              child: child);
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //------------------------------------
+                            // Description Boat
+                            //------------------------------------
+                            const SizedBox(height: 20),
+                            Text(
+                              boat.description,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w300,
                               ),
-                            );
-                          },
+                            ),
+                            //------------------------------------
+                            // SPECS
+                            //------------------------------------
+                            const SizedBox(height: 30),
+                            Text(
+                              'SPECS',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            _BoatSpecsList(boat: boat),
+                            //-------------------------------------
+                            // Gallery List View
+                            //-------------------------------------
+                            const SizedBox(height: 20),
+                            Text(
+                              'GALLERY',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              height: 200.0,
+                              child: ListView.builder(
+                                itemCount: boat.gallery.length,
+                                scrollDirection: Axis.horizontal,
+                                itemExtent: 220,
+                                physics: const BouncingScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  final galleryPath = boat.gallery[index];
+                                  //----------------------------------------
+                                  // Gallery Image
+                                  //----------------------------------------
+                                  return Container(
+                                    margin: const EdgeInsets.only(right: 20),
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: Image.asset(
+                                      galleryPath,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
