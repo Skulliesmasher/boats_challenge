@@ -2,7 +2,7 @@
 
 | Boat Challenge |
 |----------------|
-|<img src="https://media.giphy.com/media/4c6N6Nf6a4aPBAb23t/giphy.gif" width="250">
+|<img src="https://media1.giphy.com/media/cooaFpE9NIh1xVOvEu/giphy.gif" width="250">
 
 ## Getting Started
 
