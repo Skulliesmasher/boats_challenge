@@ -72,8 +72,8 @@ class BoatSpecsPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                Transform.translate(
-                  offset: Offset(0, -270.0),
+                Align(
+                  heightFactor: .15,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
