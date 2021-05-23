@@ -74,23 +74,22 @@ class _BoatListPageState extends State<BoatListPage> {
           // Boat Page View
           //------------------------------------
           Expanded(
-            child: ValueListenableBuilder(
-                valueListenable: _pageNotifier,
-                builder: (context, value, _) {
-                  return PageView.builder(
-                    controller: _pageController,
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: Boat.listBoats.length,
-                    itemBuilder: (context, index) {
-                      final boat = Boat.listBoats[index];
-                      final factorChange = (value - index).abs();
-                      return BoatCard(
-                        boat: boat,
-                        onTapSpec: () => _openSpecsPage(context, boat),
-                        factorChange: factorChange,
-                      );
-                    },
-                  );
+            child: PageView.builder(
+                controller: _pageController,
+                physics: const BouncingScrollPhysics(),
+                itemCount: Boat.listBoats.length,
+                itemBuilder: (context, index) {
+                  final boat = Boat.listBoats[index];
+                  return ValueListenableBuilder(
+                      valueListenable: _pageNotifier,
+                      builder: (context, value, _) {
+                        final factorChange = (value - index).abs();
+                        return BoatCard(
+                          boat: boat,
+                          onTapSpec: () => _openSpecsPage(context, boat),
+                          factorChange: factorChange,
+                        );
+                      });
                 }),
           ),
         ],
